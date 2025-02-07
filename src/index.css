@@ -37,26 +37,27 @@
     @apply bg-background text-foreground antialiased;
   }
 
-  .page-transition-enter {
+  /* Page Transition Animations */
+  .page-enter {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
 
-  .page-transition-enter-active {
+  .page-enter-active {
     opacity: 1;
     transform: translateY(0);
-    transition: opacity 300ms, transform 300ms;
+    transition: opacity 400ms ease-out, transform 400ms ease-out;
   }
 
-  .page-transition-exit {
+  .page-exit {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .page-transition-exit-active {
+  .page-exit-active {
     opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 300ms, transform 300ms;
+    transform: translateY(-20px);
+    transition: opacity 400ms ease-out, transform 400ms ease-out;
   }
 
   .card-stack {
@@ -65,10 +66,25 @@
 
   .project-card {
     transform-style: preserve-3d;
-    transition: transform 0.5s;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .project-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) rotateY(2deg);
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out forwards;
   }
 }

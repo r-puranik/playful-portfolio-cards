@@ -1,12 +1,19 @@
 
 import { Navigation } from "@/components/Navigation";
+import { motion } from "framer-motion";
 
 const About = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <motion.div 
+      className="min-h-screen flex flex-col"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4 }}
+    >
       <Navigation />
       <main className="flex-1 container mx-auto px-6 py-24">
-        <div className="max-w-3xl mx-auto space-y-8 animate-fade-in">
+        <div className="max-w-3xl mx-auto space-y-8">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold tracking-tight">About Me</h1>
             <p className="text-lg text-muted-foreground">
@@ -30,7 +37,7 @@ const About = () => {
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   );
 };
 

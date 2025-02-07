@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import { X } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface Project {
   id: number;
@@ -49,14 +50,20 @@ const Projects = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <motion.div 
+      className="min-h-screen flex flex-col"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4 }}
+    >
       <Navigation />
       <main className="flex-1 container mx-auto px-6 py-24">
         <div className="max-w-5xl mx-auto">
           <h1 className="text-4xl font-bold tracking-tight mb-12">Projects</h1>
           <div className="card-stack relative h-[600px]">
             {projects.map((project, index) => (
-              <div
+              <motion.div
                 key={project.id}
                 className={`
                   project-card absolute inset-0 p-6 bg-card rounded-lg border shadow-lg
@@ -75,6 +82,13 @@ const Projects = () => {
                   transform: `translateZ(${-index * 10}px)`,
                 }}
                 onClick={() => handleCardClick(index)}
+                initial={false}
+                animate={{
+                  scale: activeIndex === index ? 1 : 0.95,
+                  translateX: activeIndex === index ? "-50%" : "0%",
+                  opacity: activeIndex === null || activeIndex === index ? 1 : 0,
+                }}
+                transition={{ duration: 0.3 }}
               >
                 <div className="h-full flex flex-col">
                   <div className="flex justify-between items-start mb-4">
@@ -101,12 +115,12 @@ const Projects = () => {
                     </div>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </main>
-    </div>
+    </motion.div>
   );
 };
 
