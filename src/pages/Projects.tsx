@@ -16,32 +16,33 @@ const projects: Project[] = [
     id: 1,
     title: "Project One",
     description: "A revolutionary web application",
-    pdfUrl: "/project1.pdf",
+    pdfUrl: "/project1.pdf", // Make sure this PDF exists in your public folder
   },
   {
     id: 2,
     title: "Project Two",
     description: "An innovative mobile app",
-    pdfUrl: "/project2.pdf",
+    pdfUrl: "/project2.pdf", // Make sure this PDF exists in your public folder
   },
   {
     id: 3,
     title: "Project Three",
     description: "A groundbreaking platform",
-    pdfUrl: "/project3.pdf",
+    pdfUrl: "/project3.pdf", // Make sure this PDF exists in your public folder
   },
 ];
 
 const Projects = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [iframeKey, setIframeKey] = useState(0); // Add key for iframe refresh
+  const [iframeKey, setIframeKey] = useState(0);
+  const [pdfError, setPdfError] = useState<{ [key: number]: boolean }>({});
 
   const handleCardClick = (index: number) => {
     if (isAnimating || activeIndex === index) return;
     setIsAnimating(true);
     setActiveIndex(index);
-    setIframeKey(prev => prev + 1); // Refresh iframe to trigger animation
+    setIframeKey(prev => prev + 1);
     setTimeout(() => setIsAnimating(false), 500);
   };
 
@@ -49,6 +50,10 @@ const Projects = () => {
     setIsAnimating(true);
     setActiveIndex(null);
     setTimeout(() => setIsAnimating(false), 500);
+  };
+
+  const handlePdfError = (projectId: number) => {
+    setPdfError(prev => ({ ...prev, [projectId]: true }));
   };
 
   return (
@@ -118,30 +123,36 @@ const Projects = () => {
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                       >
-                        <iframe
-                          key={iframeKey}
-                          src={project.pdfUrl}
-                          className="w-full h-full"
-                          title={project.title}
-                          onLoad={(e) => {
-                            // Add fade-in animation to PDF slides
-                            const iframe = e.target as HTMLIFrameElement;
-                            if (iframe.contentDocument) {
-                              const style = document.createElement('style');
-                              style.textContent = `
-                                @keyframes fadeIn {
-                                  from { opacity: 0; }
-                                  to { opacity: 1; }
-                                }
-                                .page {
-                                  opacity: 0;
-                                  animation: fadeIn 0.5s ease-in-out forwards;
-                                }
-                              `;
-                              iframe.contentDocument.head.appendChild(style);
-                            }
-                          }}
-                        />
+                        {pdfError[project.id] ? (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                            <p>PDF not available. Please add {project.pdfUrl} to your public folder.</p>
+                          </div>
+                        ) : (
+                          <iframe
+                            key={iframeKey}
+                            src={project.pdfUrl}
+                            className="w-full h-full"
+                            title={project.title}
+                            onError={() => handlePdfError(project.id)}
+                            onLoad={(e) => {
+                              const iframe = e.target as HTMLIFrameElement;
+                              if (iframe.contentDocument) {
+                                const style = document.createElement('style');
+                                style.textContent = `
+                                  @keyframes fadeIn {
+                                    from { opacity: 0; }
+                                    to { opacity: 1; }
+                                  }
+                                  .page {
+                                    opacity: 0;
+                                    animation: fadeIn 0.5s ease-in-out forwards;
+                                  }
+                                `;
+                                iframe.contentDocument.head.appendChild(style);
+                              }
+                            }}
+                          />
+                        )}
                       </motion.div>
                     )}
                   </div>
