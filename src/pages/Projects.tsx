@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { Navigation } from "@/components/Navigation";
-import { X } from "lucide-react";
+import { X, FileText, ExternalLink } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Project {
@@ -15,19 +15,19 @@ const projects: Project[] = [
   {
     id: 1,
     title: "Project One",
-    description: "A revolutionary web application",
+    description: "A revolutionary web application that transforms how users interact with data. Built with modern technologies and focused on user experience.",
     pdfUrl: "/project1.pdf", // Make sure this PDF exists in your public folder
   },
   {
     id: 2,
     title: "Project Two",
-    description: "An innovative mobile app",
+    description: "An innovative mobile app that connects people in meaningful ways. Features real-time communication and seamless integration.",
     pdfUrl: "/project2.pdf", // Make sure this PDF exists in your public folder
   },
   {
     id: 3,
     title: "Project Three",
-    description: "A groundbreaking platform",
+    description: "A groundbreaking platform that revolutionizes workflow automation. Leverages AI and machine learning for optimal results.",
     pdfUrl: "/project3.pdf", // Make sure this PDF exists in your public folder
   },
 ];
@@ -75,7 +75,7 @@ const Projects = () => {
                   key={project.id}
                   className={`
                     project-card absolute inset-0 p-6 bg-card rounded-lg border shadow-lg
-                    ${activeIndex === null ? "cursor-pointer" : ""}
+                    ${activeIndex === null ? "cursor-pointer hover:shadow-xl transition-shadow" : ""}
                     ${
                       activeIndex === index
                         ? "animate-card-reveal"
@@ -101,7 +101,7 @@ const Projects = () => {
                   <div className="h-full flex flex-col">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h2 className="text-2xl font-semibold">{project.title}</h2>
+                        <h2 className="text-2xl font-semibold mb-2">{project.title}</h2>
                         <p className="text-muted-foreground">{project.description}</p>
                       </div>
                       {activeIndex === index && (
@@ -116,7 +116,7 @@ const Projects = () => {
                         </button>
                       )}
                     </div>
-                    {activeIndex === index && (
+                    {activeIndex === index ? (
                       <motion.div 
                         className="flex-1 bg-muted rounded-md overflow-hidden"
                         initial={{ opacity: 0 }}
@@ -124,8 +124,14 @@ const Projects = () => {
                         transition={{ duration: 0.5, delay: 0.2 }}
                       >
                         {pdfError[project.id] ? (
-                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                            <p>PDF not available. Please add {project.pdfUrl} to your public folder.</p>
+                          <div className="w-full h-full flex flex-col items-center justify-center text-muted-foreground p-8">
+                            <FileText className="w-16 h-16 mb-4 opacity-50" />
+                            <p className="text-lg mb-2">PDF not available yet</p>
+                            <p className="text-sm opacity-70 text-center mb-4">Add {project.pdfUrl} to your public folder to view the full project details.</p>
+                            <div className="flex items-center gap-2 text-primary hover:opacity-80 transition-opacity">
+                              <ExternalLink className="w-4 h-4" />
+                              <span>View project details</span>
+                            </div>
                           </div>
                         ) : (
                           <iframe
@@ -154,6 +160,11 @@ const Projects = () => {
                           />
                         )}
                       </motion.div>
+                    ) : (
+                      <div className="mt-4 flex items-center gap-2 text-primary">
+                        <FileText className="w-4 h-4" />
+                        <span className="text-sm">Click to view project details</span>
+                      </div>
                     )}
                   </div>
                 </motion.div>
